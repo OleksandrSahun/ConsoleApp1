@@ -57,65 +57,64 @@ namespace TaxiService
     }
 
     // Клас водія таксі, наслідує AbstractPerson та реалізує інтерфейс RideInterface
-    class TaxiDriver : AbstractPerson, RideInterface
+// Класс Машина
+class Car
+{
+    public string Model { get; set; }
+    public string LicenseNumber { get; set; }
+
+    public Car(string model, string licenseNumber)
     {
-        public string CarModel { get; set; }
-        public string LicenseNumber { get; set; }
+        Model = model;
+        LicenseNumber = licenseNumber;
+    }
+}
 
-        public TaxiDriver(string name, string phoneNumber, string carModel, string licenseNumber) 
-            : base(name, phoneNumber)
-        {
-            CarModel = carModel;
-            LicenseNumber = licenseNumber;
-        }
+// Класс водія таксі, наслідує AbstractPerson та використовує композицію
+class TaxiDriver : AbstractPerson, RideInterface
+{
+    public Car Car { get; set; }
 
-        // Прийняття замовлення
-        public void AcceptOrder()
-        {
-            Console.WriteLine($"{Name} has accepted an order.");
-        }
-
-        // Перевантажений метод прийняття замовлення з пріоритетом
-        public void AcceptOrder(int priority)
-        {
-            Console.WriteLine($"{Name} has accepted an order with priority {priority}.");
-        }
-
-        // Побудова маршруту
-        public void BuildRoute()
-        {
-            Console.WriteLine($"{Name} is building a route.");
-        }
-
-        // Завершення поїздки
-        public void MarkComplete()
-        {
-            Console.WriteLine($"{Name} has completed the ride.");
-        }
-
-        // Перевизначений метод логіну
-        public override void Login()
-        {
-            Console.WriteLine($"{Name} has logged in as a taxi driver.");
-        }
+    public TaxiDriver(string name, string phoneNumber, Car car)
+        : base(name, phoneNumber)
+    {
+        Car = car;
     }
 
-    class Program
+    public void AcceptOrder()
     {
-        static void Main(string[] args)
-        {
-            // Створення клієнта
-            Client client = new Client("John Doe", "123-456-7890", "Central Park", 20.5);
-            client.Login();
-            client.PublishOrder();
-            client.PayForRide();
+        Console.WriteLine($"{Name} has accepted an order.");
+    }
 
-            // Створення водія таксі
-            TaxiDriver driver = new TaxiDriver("Alice Smith", "098-765-4321", "Toyota Camry", "XYZ123");
-            driver.Login();
-            driver.AcceptOrder();
-            driver.BuildRoute();
-            driver.MarkComplete();
-        }
+    public void BuildRoute()
+    {
+        Console.WriteLine($"{Name} is building a route.");
+    }
+
+    public void MarkComplete()
+    {
+        Console.WriteLine($"{Name} has completed the ride.");
+    }
+
+    public override void Login()
+    {
+        Console.WriteLine($"{Name} has logged in as a taxi driver.");
+    }
+}
+
+// В методі Main
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Создаём машину
+        Car car = new Car("Toyota Camry", "XYZ123");
+
+        // Створення водія таксі з композицією
+        TaxiDriver driver = new TaxiDriver("Alice Smith", "098-765-4321", car);
+        driver.Login();
+        driver.AcceptOrder();
+        driver.BuildRoute();
+        driver.MarkComplete();
     }
 }
